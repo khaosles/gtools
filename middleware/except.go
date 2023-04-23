@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/khaosles/gtools/gresponse"
+
+	"github.com/khaosles/gtools/gresult"
 )
 
 /*
@@ -19,7 +20,7 @@ func Except() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				c.Abort()
-				c.JSON(http.StatusOK, gresponse.JsonResponse{}.CatchErr(err))
+				c.JSON(http.StatusOK, gresult.JsonResult{}.CatchErr(err))
 				return
 			}
 		}()
