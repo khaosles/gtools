@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
-	"syscall"
 )
 
 /*
@@ -75,7 +74,7 @@ func Asyn(cmdName string, args ...string) {
 	log.Println("[CMD] 执行命令=> ", cmdName)
 	log.Println("[CMD] 参数=> ", args)
 	cmd := exec.Command(cmdName, args...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	// cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	if err := cmd.Start(); err != nil {
 		log.Println("[CMD] Error:", err)
 		return
