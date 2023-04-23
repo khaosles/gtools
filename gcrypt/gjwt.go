@@ -9,6 +9,8 @@ package gcrypt
 
 import (
 	"time"
+
+	"github.com/golang-jwt/jwt"
 )
 
 type Payload struct {
@@ -19,7 +21,7 @@ type Payload struct {
 
 // GenerateToken 根据用户的用户名和密码产生token
 func GenerateToken(userID, username, jwtSecret string) (string, error) {
-	//设置token有效时间
+	// 设置token有效时间
 	nowTime := time.Now()
 	expireTime := nowTime.Add(1 * time.Hour)
 

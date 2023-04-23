@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/khaosles/dor/gtools/gerror"
+	"github.com/khaosles/gtools/gerror"
 )
 
 /*

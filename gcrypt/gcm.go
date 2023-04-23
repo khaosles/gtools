@@ -8,7 +8,7 @@ import (
 
 	tsgutils "github.com/typa01/go-utils"
 
-	"github.com/khaosles/dor/gtools/gerror"
+	"github.com/khaosles/gtools/gerror"
 )
 
 /*

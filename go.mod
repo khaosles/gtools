@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.1.2
-	github.com/khaosles/dor/gtools v0.0.0-20230412165439-7b174ef228ff
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2
