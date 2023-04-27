@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"log"
+
 	"github.com/khaosles/gtools/gcfg"
 	"github.com/khaosles/gtools/gdb/internal"
 	"github.com/khaosles/gtools/glog"
@@ -27,13 +29,14 @@ func init() {
 		SkipInitializeWithVersion: true,      // 根据版本自动配置
 	}
 	if DB, err = gorm.Open(mysql.New(mysqlConfig), internal.Gorm.Config(cfg.Prefix, cfg.Singular, cfg.LogMode, cfg.LogZap)); err != nil {
-		glog.Error("Database connection failure=> ", cfg.Dsn())
+		log.Fatal("Database connection failed=> ", cfg.Dsn())
 		return
 	} else {
 		DB.InstanceSet("gorm:table_options", "ENGINE="+cfg.Engine)
 		sqlDB, _ := DB.DB()
 		sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+		glog.Debug("数据库连接成功...")
 		return
 	}
 }
