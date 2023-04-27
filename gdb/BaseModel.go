@@ -33,7 +33,7 @@ type BaseModelSelf struct {
 	ID         string         `json:"id" gorm:"type:varchar(32);comment:主键"`         // 主键ID
 	CreateTime time.Time      `json:"createTime" gorm:"autoCreateTime;comment:创建时间"` // 创建时间
 	UpdateTime time.Time      `json:"updateTime" gorm:"autoUpdateTime;comment:更新时间"` // 更新时间
-	IsDelete   gorm.DeletedAt `json:"-" gorm:"index;comment:有效标识(1正常 0删除)"`          // 删除标记
+	Sign       gorm.DeletedAt `json:"-" gorm:"index;comment:有效标识(1正常 0删除)"`          // 删除标记
 	Remarks    string         `json:"remarks" gorm:"comment:备注"`                     // 备注
 }
 
