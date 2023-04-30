@@ -21,8 +21,8 @@ func (dao *BaseDao[T]) SetDB(db *gorm.DB) *BaseDao[T] {
 }
 
 // Create 创建
-func (dao BaseDao[T]) Create(obj T) (err error) {
-	err = dao.db.Create(&obj).Error
+func (dao BaseDao[T]) Create(obj *T) (err error) {
+	err = dao.db.Create(obj).Error
 	return
 }
 
@@ -136,14 +136,14 @@ func (dao BaseDao[T]) DeleteByObjs(objs ...T) (err error) {
 }
 
 // UpdateByObj 通过对象更新
-func (dao BaseDao[T]) UpdateByObj(obj T) (err error) {
+func (dao BaseDao[T]) UpdateByObj(obj *T) (err error) {
 	err = dao.db.Save(obj).Error
 	return err
 }
 
 // UpdateByColumn 通过列更新
-func (dao BaseDao[T]) UpdateByColumn(obj T, value any) (err error) {
-	err = dao.db.Model(&obj).Updates(value).Error
+func (dao BaseDao[T]) UpdateByColumn(obj *T, value any) (err error) {
+	err = dao.db.Model(obj).Updates(value).Error
 	return err
 }
 
