@@ -118,6 +118,17 @@ func (dao BaseDao[T]) DeleteByIDs(ids ...string) (err error) {
 	return
 }
 
+// DeleteByIDs 通过一个或者多个id删除
+func (dao BaseDao[T]) DeleteByColumns(column string, value ...string) (err error) {
+	var objs []T
+	err = dao.db.Where(column+" in (?)", value).Find(&objs).Error
+	if err != nil {
+		return
+	}
+	err = dao.DeleteByObjs(objs...)
+	return
+}
+
 // DeleteByObjs 根据对象删除
 func (dao BaseDao[T]) DeleteByObjs(objs ...T) (err error) {
 	err = dao.db.Delete(&objs).Error
