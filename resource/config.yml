@@ -1,10 +1,10 @@
 mysql:
-  host: "43.138.67.136"
+  host: ""
   port: "3306"
   config: "charset=utf8&timeout=3s&parseTime=true&loc=Local"
-  db-name: "dor_admin"
+  db-name: ""
   username: "root"
-  password: "GISgis123"
+  password: ""
   prefix: ""
   singular: true
   engine: ""
@@ -13,12 +13,12 @@ mysql:
   log-mode: "info"
   log-zap: false
 pgsql:
-  host: "43.138.67.136"
-  port: "5432"
+  host: ""
+  port: ""
   config: ""
-  db-name: "dor_admin"
-  username: "postgres"
-  password: "GISgis123."
+  db-name: ""
+  username: ""
+  password: ""
   prefix: ""
   singular: true
   engine: ""
@@ -28,8 +28,8 @@ pgsql:
   log-zap: false
 redis:
   db: 0
-  addr: 43.138.67.136:6379
-  password: "GISgis123."
+  addr:
+  password: ""
 logging:
   level-console: debug      # 控制台日志等级
   level-file: info          # 文件日志等级
