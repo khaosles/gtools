@@ -1,4 +1,4 @@
-package gdb
+package g
 
 import (
 	"strings"
