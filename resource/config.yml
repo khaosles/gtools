@@ -1,0 +1,41 @@
+mysql:
+  host: "43.138.67.136"
+  port: "3306"
+  config: "charset=utf8&timeout=3s&parseTime=true&loc=Local"
+  db-name: "dor_admin"
+  username: "root"
+  password: "GISgis123"
+  prefix: ""
+  singular: true
+  engine: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: "info"
+  log-zap: false
+pgsql:
+  host: "43.138.67.136"
+  port: "5432"
+  config: ""
+  db-name: "dor_admin"
+  username: "postgres"
+  password: "GISgis123."
+  prefix: ""
+  singular: true
+  engine: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: "info"
+  log-zap: false
+redis:
+  db: 0
+  addr: 43.138.67.136:6379
+  password: "GISgis123."
+logging:
+  level-console: debug      # 控制台日志等级
+  level-file: info          # 文件日志等级
+  prefix: ""                # 日志前缀
+  path: ""                  # 日志保存路径，默认程序路径下的logs目录
+  max-history: 7            # 日志保存时间
+  log-in-console: true      # 是否输出到控制台
+  log-in-file: true         # 是否输出到文件
+  show-line: false          # 是否显示日志所在行数
