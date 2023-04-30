@@ -15,8 +15,9 @@ type BaseDao[T any] struct {
 	db *gorm.DB
 }
 
-func (dao *BaseDao[T]) SetDB(db *gorm.DB) {
+func (dao *BaseDao[T]) SetDB(db *gorm.DB) *BaseDao[T] {
 	dao.db = db
+	return dao
 }
 
 // Create 创建
