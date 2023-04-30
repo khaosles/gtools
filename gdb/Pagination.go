@@ -26,3 +26,9 @@ func NewPagination(pageSize, page int, sort string) Pagination {
 		Sort:     sort,
 	}
 }
+
+//type PaginationDto[T any] struct {
+//	TotalPages int64 `json:"totalPages" uri:"totalPages"`
+//	TotalCount int64 `json:"totalCount" uri:"totalCount"`
+//	Objs       T     `json:"objs" uri:"objs"`
+//}
