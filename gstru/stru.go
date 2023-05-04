@@ -1,7 +1,6 @@
-package gstructs
+package gstru
 
 import (
-	"encoding/json"
 	"reflect"
 )
 
@@ -33,21 +32,22 @@ func Assignment[T1, T2 any](elem1 T1, elem2 *T2) {
 	}
 }
 
-// Struct2Map 将结构体转换为 Map
-func Struct2Map(obj interface{}) map[string]interface{} {
-	t := reflect.TypeOf(obj)
-	v := reflect.ValueOf(obj)
-
-	var data = make(map[string]interface{})
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		value := v.Field(i)
-		if value.Kind() == reflect.Slice {
-			bytes, _ := json.Marshal(value.Interface())
-			data[field.Name] = string(bytes)
-		} else {
-			data[field.Name] = value.Interface()
+func StructToMap(obj interface{}) map[string]interface{} {
+	objValue := reflect.ValueOf(obj)
+	objType := objValue.Type()
+	// 如果传入的不是结构体指针，则直接返回空map
+	if objType.Kind() != reflect.Ptr || objType.Elem().Kind() != reflect.Struct {
+		return map[string]interface{}{}
+	}
+	data := make(map[string]interface{})
+	for i := 0; i < objValue.Elem().NumField(); i++ {
+		field := objType.Elem().Field(i)
+		value := objValue.Elem().Field(i)
+		// 如果字段是空值，则跳过
+		if reflect.DeepEqual(value.Interface(), reflect.Zero(value.Type()).Interface()) {
+			continue
 		}
+		data[field.Name] = value.Interface()
 	}
 	return data
 }
