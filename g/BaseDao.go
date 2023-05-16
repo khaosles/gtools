@@ -11,7 +11,7 @@ import (
    @Desc:
 */
 
-type BaseDao[T any] struct {
+type BaseDao[T ModelInterface] struct {
 	db *gorm.DB
 }
 
@@ -32,30 +32,38 @@ func (dao BaseDao[T]) GetByID(id string) (obj T, err error) {
 	return
 }
 
-// GetByColumn 根据唯一值列查询
-func (dao BaseDao[T]) GetByColumn(column, value string) (obj T, err error) {
-	err = dao.db.Where(column+" = ?", value).First(&obj).Error
-	return
-}
-
-// GetByFilter 根据条件查询
-func (dao BaseDao[T]) GetByFilter(filter string, value ...any) (objs []T, err error) {
-	err = dao.db.Where(filter, value).Find(&objs).Error
-	return
-}
-
 // GetByIDs 根据多个id查询
 func (dao BaseDao[T]) GetByIDs(ids ...string) (objs []T, err error) {
 	err = dao.db.Where("id in (?)", ids).Find(&objs).Error
 	return
 }
 
-// GetByPage 分页查询
-func (dao BaseDao[T]) GetByPage(pagination Pagination, filter string, args ...any) (objs []T, totalPages int64, err error) {
+// GetOne 根据字段查询
+func (dao BaseDao[T]) GetOne(filedName string, value any) (obj T, err error) {
+	err = dao.db.Where(filedName+" = ?", value).First(&obj).Error
+	return
+}
+
+// GetBy 获取多条数据
+func (dao BaseDao[T]) GetBy(filedName string, value ...any) (objs []T, err error) {
+	err = dao.db.Where(filedName+" = (?)", value).Find(&objs).Error
+	return
+}
+
+// GetAll 获取全部数据
+func (dao BaseDao[T]) GetAll() (objs []T, err error) {
+	err = dao.db.Find(&objs).Error
+	return
+}
+
+// GetPageBy 分页查询
+func (dao BaseDao[T]) GetPageBy(pagination Pagination, filter string, args ...any) (PagingResult[T], error) {
+	var objs []T
 	var totalCount int64
+	var totalPages int64
 	// 计算总记录数
-	if err = dao.db.Model(objs).Count(&totalCount).Error; err != nil {
-		return
+	if err := dao.db.Model(objs).Count(&totalCount).Error; err != nil {
+		return PagingResult[T]{}, err
 	}
 	// 获取总页数
 	totalPages = totalCount / int64(pagination.PageSize)
@@ -64,46 +72,44 @@ func (dao BaseDao[T]) GetByPage(pagination Pagination, filter string, args ...an
 	}
 	// 当前页
 	pageIndex := (pagination.Page - 1) * pagination.PageSize
-	err = dao.db.Order(pagination.Sort).
+	err := dao.db.Order(pagination.Sort).
 		Offset(pageIndex).
 		Limit(pagination.PageSize).
 		Where(filter, args).
 		Find(&objs).
 		Error
-	return
+	pagingResult := PagingResult[T]{TotalPages: totalPages, TotalCount: totalCount, Objs: objs}
+	return pagingResult, err
 }
 
-// GetByPageALL 分页查询全部
-func (dao BaseDao[T]) GetByPageALL(pagination Pagination) (objs []T, totalPages int64, err error) {
+// GetPage 分页查询全部
+func (dao BaseDao[T]) GetPage(pagination Pagination) (PagingResult[T], error) {
+	var objs []T
 	var totalCount int64
+	var totalPages int64
 	// 计算总记录数
-	if err = dao.db.Model(objs).Count(&totalCount).Error; err != nil {
-		return
+	if err := dao.db.Model(objs).Count(&totalCount).Error; err != nil {
+		return PagingResult[T]{}, err
 	}
 	// 获取总页数
 	totalPages = totalCount / int64(pagination.PageSize)
 	if totalCount%int64(pagination.PageSize) > 0 {
 		totalPages++
 	}
-	// 获取当前页索引
+	// 当前页
 	pageIndex := (pagination.Page - 1) * pagination.PageSize
-	err = dao.db.Order(pagination.Sort).
+	err := dao.db.Order(pagination.Sort).
 		Offset(pageIndex).
 		Limit(pagination.PageSize).
 		Find(&objs).
 		Error
-	return
+	pagingResult := PagingResult[T]{TotalPages: totalPages, TotalCount: totalCount, Objs: objs}
+	return pagingResult, err
 }
 
-// GetList 获取多条数据
-func (dao BaseDao[T]) GetList(filter string, value ...any) (objs []T, err error) {
-	err = dao.db.Where(filter, value).Find(&objs).Error
-	return
-}
-
-// GetAll 获取全部数据
-func (dao BaseDao[T]) GetAll() (objs []T, err error) {
-	err = dao.db.Find(&objs).Error
+// Delete 根据对象删除
+func (dao BaseDao[T]) Delete(objs ...T) (err error) {
+	err = dao.db.Delete(&objs).Error
 	return
 }
 
@@ -114,47 +120,29 @@ func (dao BaseDao[T]) DeleteByIDs(ids ...string) (err error) {
 	if err != nil {
 		return
 	}
-	err = dao.DeleteByObjs(objs...)
+	err = dao.Delete(objs...)
 	return
 }
 
-// DeleteByIDs 通过一个或者多个id删除
-func (dao BaseDao[T]) DeleteByColumns(column string, value ...string) (err error) {
+// DeleteBy 通过一个或者多个id删除
+func (dao BaseDao[T]) DeleteBy(filedName string, value ...string) (err error) {
 	var objs []T
-	err = dao.db.Where(column+" in (?)", value).Find(&objs).Error
+	err = dao.db.Where(filedName+" in (?)", value).Find(&objs).Error
 	if err != nil {
 		return
 	}
-	err = dao.DeleteByObjs(objs...)
+	err = dao.Delete(objs...)
 	return
 }
 
-// DeleteByObjs 根据对象删除
-func (dao BaseDao[T]) DeleteByObjs(objs ...T) (err error) {
-	err = dao.db.Delete(&objs).Error
-	return
-}
-
-// UpdateByObj 通过对象更新
-func (dao BaseDao[T]) UpdateByObj(obj *T) (err error) {
+// Update 通过对象更新
+func (dao BaseDao[T]) Update(obj *T) (err error) {
 	err = dao.db.Save(obj).Error
 	return err
 }
 
-// UpdateByColumn 通过列更新
-func (dao BaseDao[T]) UpdateByColumn(obj *T, value any) (err error) {
+// UpdateBy 通过列更新
+func (dao BaseDao[T]) UpdateBy(obj *T, value map[string]any) (err error) {
 	err = dao.db.Model(obj).Updates(value).Error
 	return err
-}
-
-// RawQuery 原始查询
-func (dao BaseDao[T]) RawQuery(sql string, values ...any) (objs []T, err error) {
-	err = dao.db.Exec(sql, values).Scan(&objs).Error
-	return
-}
-
-// Raw 原始cud
-func (dao BaseDao[T]) Raw(sql string, values ...any) (err error) {
-	err = dao.db.Exec(sql, values).Error
-	return
 }

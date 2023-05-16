@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
+type ModelInterface interface{}
+
 type BaseModel struct {
 	ID        string         `json:"id" gorm:"type:varchar(32);comment:主键"` // 主键ID
 	CreatedAt time.Time      `json:"createdAt" gorm:"comment:创建时间"`         // 创建时间
