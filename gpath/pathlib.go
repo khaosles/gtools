@@ -1,6 +1,7 @@
 package gpath
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,11 +57,11 @@ func IsDir(path string) bool {
 func FileSize(path string) int64 {
 	path = Format(path)
 	if !IsFile(path) {
-		panic("FileNotExist: '" + path + "' not exist")
+		log.Println("FileNotExist: '" + path + "' not exist")
 	}
 	fileStat, err := os.Stat(path)
 	if err != nil {
-		panic("FileOpenError: cannot open the file" + path)
+		log.Println("FileOpenError: cannot open the file" + path)
 	}
 	return fileStat.Size()
 }
@@ -99,13 +100,13 @@ func Mkdir(path string) {
 	path = Format(path)
 	// if path is a file, raise an error
 	if IsFile(path) {
-		panic("FolderCreateError: path is a file, " + path)
+		log.Println("FolderCreateError: path is a file, " + path)
 	}
 	if !IsDir(path) {
 		// create the folder
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			panic("FolderCreateError: " + err.Error())
+			log.Println("FolderCreateError: " + err.Error())
 		}
 	}
 }
@@ -123,7 +124,7 @@ func Abs(path string) string {
 	} else {
 		absPath, err := filepath.Abs(path)
 		if err != nil {
-			panic("AbsPathGetError" + err.Error())
+			log.Println("AbsPathGetError" + err.Error())
 		}
 		return absPath
 	}
@@ -136,7 +137,7 @@ func Remove(path string) {
 	}
 	err := os.RemoveAll(path)
 	if err != nil {
-		panic("RemoveFileError: " + err.Error())
+		log.Println("RemoveFileError: " + err.Error())
 	}
 }
 
@@ -147,11 +148,18 @@ func RemoveFile(path string) {
 	}
 	err := os.Remove(path)
 	if err != nil {
-		panic("RemoveFileError: " + err.Error())
+		log.Println("RemoveFileError: " + err.Error())
 	}
 }
 
 func RootPath() string {
 	rootPath, _ := os.Getwd()
 	return rootPath
+}
+
+func Rename(src, dst string) {
+	err := os.Rename(src, dst)
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
