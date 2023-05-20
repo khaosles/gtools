@@ -58,10 +58,12 @@ func FileSize(path string) int64 {
 	path = Format(path)
 	if !IsFile(path) {
 		log.Println("FileNotExist: '" + path + "' not exist")
+		return 0
 	}
 	fileStat, err := os.Stat(path)
 	if err != nil {
 		log.Println("FileOpenError: cannot open the file" + path)
+		return 0
 	}
 	return fileStat.Size()
 }
