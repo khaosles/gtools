@@ -15,46 +15,58 @@ type Numeric interface {
 	int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64 | float32 | float64
 }
 
-type Number[T Numeric] struct {
+type SafeNumber[T Numeric] struct {
 	value T
 	mutex sync.Mutex
 }
 
-func NewNumber[T Numeric](i T) Number[T] {
-	return Number[T]{value: i}
+func NewSafeNumber[T Numeric](i T) SafeNumber[T] {
+	return SafeNumber[T]{value: i}
 }
 
-func (n *Number[T]) Add(val T) {
+func (n *SafeNumber[T]) Inc() {
+	n.mutex.Lock()
+	defer n.mutex.Unlock()
+	n.value++
+}
+
+func (n *SafeNumber[T]) Dec() {
+	n.mutex.Lock()
+	defer n.mutex.Unlock()
+	n.value--
+}
+
+func (n *SafeNumber[T]) Add(val T) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	n.value = n.value + val
 }
 
-func (n *Number[T]) Sub(val T) {
+func (n *SafeNumber[T]) Sub(val T) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	n.value = n.value - val
 }
 
-func (n *Number[T]) Multiply(val T) {
+func (n *SafeNumber[T]) Multiply(val T) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	n.value = n.value * val
 }
 
-func (n *Number[T]) Divide(val T) {
+func (n *SafeNumber[T]) Divide(val T) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	n.value = n.value / val
 }
 
-func (n *Number[T]) Get() T {
+func (n *SafeNumber[T]) Get() T {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	return n.value
 }
 
-func (n *Number[T]) Set(val T) {
+func (n *SafeNumber[T]) Set(val T) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	n.value = val
