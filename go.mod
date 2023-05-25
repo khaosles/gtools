@@ -30,6 +30,7 @@ require (
 	cloud.google.com/go/iam v0.8.0 // indirect
 	cloud.google.com/go/storage v1.27.0 // indirect
 	github.com/aws/aws-sdk-go v1.44.122 // indirect
+	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/cavaliergopher/grab/v3 v3.0.1 // indirect

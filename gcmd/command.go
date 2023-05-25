@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"syscall"
+
+	"github.com/axgle/mahonia"
 )
 
 /*
@@ -48,16 +51,17 @@ func Sync(cmdName string, args ...string) error {
 		log.Println("[CMD] Error:", err)
 		return err
 	}
+	encoder := mahonia.NewEncoder("utf8")
 	go func() {
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
-			log.Println("[CMD] ", scanner.Text())
+			log.Println("[CMD] ", encoder.ConvertString(scanner.Text()))
 		}
 	}()
 	go func() {
 		scanner := bufio.NewScanner(stderr)
 		for scanner.Scan() {
-			log.Println("[CMD] ", scanner.Text())
+			log.Println("[CMD] ", encoder.ConvertString(scanner.Text()))
 		}
 	}()
 	if err := cmd.Wait(); err != nil {
@@ -74,7 +78,7 @@ func Asyn(cmdName string, args ...string) {
 	log.Println("[CMD] 执行命令=> ", cmdName)
 	log.Println("[CMD] 参数=> ", args)
 	cmd := exec.Command(cmdName, args...)
-	// cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	if err := cmd.Start(); err != nil {
 		log.Println("[CMD] Error:", err)
 		return
